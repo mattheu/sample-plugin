@@ -1,0 +1,19 @@
+{
+	"name": "sample-plugin/block",
+	"description": "A basic Gutenberg block",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"require-dev": {
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"wp-coding-standards/wpcs": "^3.0",
+		"automattic/vipwpcs": "^3.0"
+	},
+	"scripts": {
+		"lint:php": "phpcs"
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	}
+}
