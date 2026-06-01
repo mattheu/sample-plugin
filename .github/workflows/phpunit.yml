@@ -26,8 +26,25 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-progress --no-interaction
 
+      - name: Cache Docker images
+        id: docker-cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/docker-images
+          key: docker-wp-env-${{ hashFiles('.wp-env.json') }}
+
+      - name: Load Docker images
+        if: steps.docker-cache.outputs.cache-hit == 'true'
+        run: docker load < /tmp/docker-images/images.tar
+
       - name: Start wp-env
         run: npx wp-env start
+
+      - name: Save Docker images
+        if: steps.docker-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p /tmp/docker-images
+          docker save $(docker image ls -q) -o /tmp/docker-images/images.tar
 
       - name: Run PHPUnit
         run: npm run test:php
