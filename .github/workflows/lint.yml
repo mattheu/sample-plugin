@@ -1,0 +1,56 @@
+name: Lint
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lint-js-css:
+    name: Lint JS & CSS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - uses: reviewdog/action-setup@v1
+
+      - name: Lint JS
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run lint:js -- --format json | reviewdog -f=eslint -name="eslint" -reporter=github-pr-review -fail-on-error
+
+      - name: Lint CSS
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run lint:css -- --formatter json | reviewdog -f=stylelint -name="stylelint" -reporter=github-pr-review -fail-on-error
+
+  lint-php:
+    name: Lint PHP
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
+
+      - name: Install Composer dependencies
+        run: composer install --no-progress --no-interaction
+
+      - uses: reviewdog/action-setup@v1
+
+      - name: Lint PHP
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: composer run lint:php -- --report=checkstyle --no-colors | reviewdog -f=checkstyle -name="phpcs" -reporter=github-pr-review -fail-on-error
