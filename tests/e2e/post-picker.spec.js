@@ -11,11 +11,7 @@ const LAST_POST = { id: 112, title: 'Irure Dolor Reprehenderit' };
 
 test.describe( 'Sample Post Search Block — post picker', () => {
 	test.beforeEach( async ( { admin, editor, page } ) => {
-		await admin.createNewPost( { postType: 'page' } );
-		await page
-			.getByRole( 'button', { name: 'Close' } )
-			.click( { timeout: 3000 } )
-			.catch( () => {} );
+		await admin.createNewPost( { postType: 'post' } );
 		await editor.insertBlock( {
 			name: 'sample-plugin/sample-post-search-block',
 		} );
