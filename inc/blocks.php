@@ -19,8 +19,7 @@ function bootstrap(): void {
 }
 
 /**
- * Yields IDs of posts that embed the dmg-read-more block within the given
- * date range (inclusive on both ends).
+ * Find IDs of posts that embed the post search block.
  *
  * Results are streamed via a Generator so large date ranges never hold the
  * full result set in memory. Cursor-based batching (WHERE ID > ?) is used
