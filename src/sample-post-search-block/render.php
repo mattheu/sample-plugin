@@ -3,7 +3,6 @@
  * Renders the block on the frontend.
  *
  * @param array $attributes The block attributes.
- * @return string The HTML output of the block.
  * @package SamplePlugin
  */
 
