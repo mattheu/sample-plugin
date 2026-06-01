@@ -75,7 +75,7 @@ export default function Edit( { attributes, setAttributes } ) {
 											'Remove',
 											'sample-plugin'
 										) }
-										isSmall
+										size="small"
 										onClick={ () =>
 											setAttributes( {
 												postIds: postIds.filter(
