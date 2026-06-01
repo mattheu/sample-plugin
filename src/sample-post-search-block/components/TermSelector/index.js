@@ -54,6 +54,7 @@ export default function TermSelector( props ) {
 		<div style={ { paddingBottom: 16 } }>
 			<FormTokenField
 				label={ sprintf(
+					/* translators: %s: taxonomy singular label. */
 					__( 'Filter by %s', 'sample-plugin' ),
 					taxObject ? taxObject.labels.singular_name : ''
 				) }

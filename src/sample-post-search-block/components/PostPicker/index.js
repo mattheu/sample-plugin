@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from '@wordpress/element';
+import { useCallback, useEffect, useMemo, useState } from '@wordpress/element';
 
 import {
 	Button,
@@ -145,15 +145,18 @@ function BrowsePanel( props ) {
 			? parseInt( search.trim(), 10 )
 			: null;
 
-	const queryArgs = {
-		...( searchId
-			? { include: [ searchId ] }
-			: { search: search || undefined } ),
-		per_page: 10,
-		page,
-		...taxQueries,
-		context: 'view',
-	};
+	const queryArgs = useMemo(
+		() => ( {
+			...( searchId
+				? { include: [ searchId ] }
+				: { search: search || undefined } ),
+			per_page: 10,
+			page,
+			...taxQueries,
+			context: 'view',
+		} ),
+		[ searchId, search, page, taxQueries ]
+	);
 
 	const { queriedPosts, totalPages } = useSelect(
 		( select ) => {
@@ -230,6 +233,7 @@ function BrowsePanel( props ) {
 					</Button>
 					<span style={ { fontSize: 12, color: '#757575' } }>
 						{ sprintf(
+							/* translators: 1: current page number, 2: total number of pages. */
 							__( 'Page %1$d of %2$d', 'sample-plugin' ),
 							page,
 							totalPages
