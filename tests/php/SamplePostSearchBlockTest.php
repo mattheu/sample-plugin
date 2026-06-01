@@ -65,6 +65,7 @@ class SamplePostSearchBlockTest extends WP_UnitTestCase {
 		$post_id = self::factory()->post->create( [ 'post_status' => 'private' ] );
 		$output  = $this->render( [ 'postIds' => [ $post_id ] ] );
 		$this->assertEmpty( $output );
+		$this->assertFalse( true );
 	}
 
 	/**
