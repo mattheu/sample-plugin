@@ -28,14 +28,14 @@ jobs:
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npm run lint:js -- --format json > /tmp/eslint.json || true
+          npm run --silent lint:js -- --format json > /tmp/eslint.json || true
           reviewdog -f=eslint -name="eslint" -reporter=github-pr-review -fail-on-error < /tmp/eslint.json
 
       - name: Lint CSS
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npm run lint:css -- --formatter json > /tmp/stylelint.json || true
+          npm run --silent lint:css -- --formatter json > /tmp/stylelint.json || true
           reviewdog -f=stylelint -name="stylelint" -reporter=github-pr-review -fail-on-error < /tmp/stylelint.json
 
   lint-php:
