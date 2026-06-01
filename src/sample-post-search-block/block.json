@@ -4,7 +4,7 @@
 	"name": "sample-plugin/sample-post-search-block",
 	"version": "0.1.0",
 	"title": "Sample Post Search Block",
-	"category": "common",
+	"category": "text",
 	"description": "A Read More link block with post search.",
 	"supports": {
 		"html": false,

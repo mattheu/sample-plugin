@@ -110,7 +110,7 @@ function BrowsePanel( props ) {
 		[ taxonomies ]
 	);
 
-	const [ taxQueries, setTaxQueries ] = useState( [] );
+	const [ taxQueries, setTaxQueries ] = useState( {} );
 
 	const updateTaxQueryState = useCallback(
 		( taxonomy, newTerms ) => {
@@ -120,20 +120,12 @@ function BrowsePanel( props ) {
 			if ( taxObject ) {
 				setTaxQueries( {
 					...taxQueries,
-					[ `${ taxObject.rest_base }` ]: newTerms,
+					[ taxObject.rest_base ]: newTerms,
 				} );
 			}
 		},
 		[ taxQueries, taxObjects ]
 	);
-
-	useEffect( () => {
-		taxObjects.forEach( ( taxObject ) => {
-			if ( taxObject && ! taxQueries[ taxObject.rest_base ] ) {
-				updateTaxQueryState( taxObject.rest_base, [] );
-			}
-		} );
-	}, [ taxObjects, updateTaxQueryState, taxQueries ] );
 
 	// Reset to page 1 whenever search or taxonomy filters change.
 	useEffect( () => {
