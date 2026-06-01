@@ -25,53 +25,72 @@ function PostList( props ) {
 		values = [],
 	} = props;
 
-	const fetchedPosts = useSelect( ( select ) => {
-		if ( externalPosts ) {
-			return null;
-		}
-		return select( 'core' ).getEntityRecords( 'postType', postType, queryArgs ) ?? [];
-	}, [ postType, queryArgs, externalPosts ] );
+	const fetchedPosts = useSelect(
+		( select ) => {
+			if ( externalPosts ) {
+				return null;
+			}
+			return (
+				select( 'core' ).getEntityRecords(
+					'postType',
+					postType,
+					queryArgs
+				) ?? []
+			);
+		},
+		[ postType, queryArgs, externalPosts ]
+	);
 
 	const queriedPosts = externalPosts ?? fetchedPosts ?? [];
 
-	const isResolving = useSelect( ( select ) => {
-		return select( 'core' ).isResolving( 'getEntityRecords', [ 'postType', postType, queryArgs ] );
-	}, [ postType, queryArgs ] );
+	const isResolving = useSelect(
+		( select ) => {
+			return select( 'core' ).isResolving( 'getEntityRecords', [
+				'postType',
+				postType,
+				queryArgs,
+			] );
+		},
+		[ postType, queryArgs ]
+	);
 
 	return (
-		<div style={ {
-			marginTop: -24,
-			paddingTop: 24,
-			paddingLeft: 4,
-			marginLeft: -4,
-		} }>
-			{ ( isResolving && <Spinner /> )
-				|| ( queriedPosts.length < 1 &&
+		<div
+			style={ {
+				marginTop: -24,
+				paddingTop: 24,
+				paddingLeft: 4,
+				marginLeft: -4,
+			} }
+		>
+			{ ( isResolving && <Spinner /> ) ||
+				( queriedPosts.length < 1 && (
 					<Notice isDismissible={ false }>
 						{ __( 'No results found', 'sample-plugin' ) }
 					</Notice>
-				)
-				|| (
-					queriedPosts.map( ( post ) => (
-						<div
-							key={ post.id }
-							style={ { paddingBottom: 8 } }
-						>
-							<CheckboxControl
-								checked={ values.includes( post.id ) }
-								label={ post.title?.rendered || __( '(No title)', 'sample-plugin' ) }
-								onChange={ ( checked ) => {
-									if ( checked ) {
-										onChange( [ ...values, post.id ] );
-									} else {
-										onChange( values.filter( ( value ) => value !== post.id ) );
-									}
-								} }
-							/>
-						</div>
-					) )
-				)
-			}
+				) ) ||
+				queriedPosts.map( ( post ) => (
+					<div key={ post.id } style={ { paddingBottom: 8 } }>
+						<CheckboxControl
+							checked={ values.includes( post.id ) }
+							label={
+								post.title?.rendered ||
+								__( '(No title)', 'sample-plugin' )
+							}
+							onChange={ ( checked ) => {
+								if ( checked ) {
+									onChange( [ ...values, post.id ] );
+								} else {
+									onChange(
+										values.filter(
+											( value ) => value !== post.id
+										)
+									);
+								}
+							} }
+						/>
+					</div>
+				) ) }
 		</div>
 	);
 }
@@ -82,21 +101,31 @@ function BrowsePanel( props ) {
 	const [ search, setSearch ] = useState( '' );
 	const [ page, setPage ] = useState( 1 );
 
-	const taxObjects = useSelect( ( select ) => {
-		return taxonomies.map( ( taxonomy ) => select( 'core' ).getTaxonomy( taxonomy ) );
-	}, [ taxonomies ] );
+	const taxObjects = useSelect(
+		( select ) => {
+			return taxonomies.map( ( taxonomy ) =>
+				select( 'core' ).getTaxonomy( taxonomy )
+			);
+		},
+		[ taxonomies ]
+	);
 
 	const [ taxQueries, setTaxQueries ] = useState( [] );
 
-	const updateTaxQueryState = useCallback( ( taxonomy, newTerms ) => {
-		const taxObject = taxObjects.find( ( t ) => t && t.slug === taxonomy );
-		if ( taxObject ) {
-			setTaxQueries( {
-				...taxQueries,
-				[ `${ taxObject.rest_base }` ]: newTerms,
-			} );
-		}
-	}, [ taxQueries, taxObjects ] );
+	const updateTaxQueryState = useCallback(
+		( taxonomy, newTerms ) => {
+			const taxObject = taxObjects.find(
+				( t ) => t && t.slug === taxonomy
+			);
+			if ( taxObject ) {
+				setTaxQueries( {
+					...taxQueries,
+					[ `${ taxObject.rest_base }` ]: newTerms,
+				} );
+			}
+		},
+		[ taxQueries, taxObjects ]
+	);
 
 	useEffect( () => {
 		taxObjects.forEach( ( taxObject ) => {
@@ -111,22 +140,40 @@ function BrowsePanel( props ) {
 		setPage( 1 );
 	}, [ search, taxQueries ] );
 
-	const searchId = search && /^\d+$/.test( search.trim() ) ? parseInt( search.trim(), 10 ) : null;
+	const searchId =
+		search && /^\d+$/.test( search.trim() )
+			? parseInt( search.trim(), 10 )
+			: null;
 
 	const queryArgs = {
-		...( searchId ? { include: [ searchId ] } : { search: search || undefined } ),
+		...( searchId
+			? { include: [ searchId ] }
+			: { search: search || undefined } ),
 		per_page: 10,
 		page,
 		...taxQueries,
 		context: 'view',
 	};
 
-	const { queriedPosts, totalPages } = useSelect( ( select ) => {
-		return {
-			queriedPosts: select( 'core' ).getEntityRecords( 'postType', postType, queryArgs ) ?? [],
-			totalPages: select( 'core' ).getEntityRecordsTotalPages( 'postType', postType, queryArgs ) ?? 1,
-		};
-	}, [ postType, queryArgs ] );
+	const { queriedPosts, totalPages } = useSelect(
+		( select ) => {
+			return {
+				queriedPosts:
+					select( 'core' ).getEntityRecords(
+						'postType',
+						postType,
+						queryArgs
+					) ?? [],
+				totalPages:
+					select( 'core' ).getEntityRecordsTotalPages(
+						'postType',
+						postType,
+						queryArgs
+					) ?? 1,
+			};
+		},
+		[ postType, queryArgs ]
+	);
 
 	return (
 		<Flex align="flex-start" style={ { gap: 24 } }>
@@ -136,17 +183,31 @@ function BrowsePanel( props ) {
 					value={ search }
 					onChange={ ( text ) => setSearch( text ) }
 				/>
-				<p style={ { marginTop: 4, marginBottom: 24, fontSize: 12, color: '#757575' } }>
-					{ __( 'Search by title or enter a post ID.', 'sample-plugin' ) }
+				<p
+					style={ {
+						marginTop: 4,
+						marginBottom: 24,
+						fontSize: 12,
+						color: '#757575',
+					} }
+				>
+					{ __(
+						'Search by title or enter a post ID.',
+						'sample-plugin'
+					) }
 				</p>
 				{ taxonomies.map( ( taxonomy ) => {
-					const taxObject = taxObjects.find( ( t ) => t && t.slug === taxonomy );
+					const taxObject = taxObjects.find(
+						( t ) => t && t.slug === taxonomy
+					);
 					return taxObject ? (
 						<TermSelector
 							key={ taxonomy }
 							taxonomy={ taxonomy }
 							value={ taxQueries[ taxObject.rest_base ] }
-							onChange={ ( terms ) => updateTaxQueryState( taxonomy, terms ) }
+							onChange={ ( terms ) =>
+								updateTaxQueryState( taxonomy, terms )
+							}
 						/>
 					) : null;
 				} ) }
@@ -168,7 +229,11 @@ function BrowsePanel( props ) {
 						{ __( 'Previous', 'sample-plugin' ) }
 					</Button>
 					<span style={ { fontSize: 12, color: '#757575' } }>
-						{ sprintf( __( 'Page %1$d of %2$d', 'sample-plugin' ), page, totalPages ) }
+						{ sprintf(
+							__( 'Page %1$d of %2$d', 'sample-plugin' ),
+							page,
+							totalPages
+						) }
 					</span>
 					<Button
 						variant="secondary"
@@ -227,7 +292,14 @@ export function PostPickerModal( props ) {
 					values={ pendingValues }
 					onChange={ handleChange }
 				/>
-				<Flex justify="flex-end" style={ { marginTop: 24, paddingTop: 16, borderTop: '1px solid #ddd' } }>
+				<Flex
+					justify="flex-end"
+					style={ {
+						marginTop: 24,
+						paddingTop: 16,
+						borderTop: '1px solid #ddd',
+					} }
+				>
 					<Button variant="primary" onClick={ handleConfirm }>
 						{ __( 'Select Post', 'sample-plugin' ) }
 					</Button>
@@ -288,10 +360,7 @@ export function PostPickerButton( props ) {
 
 	return (
 		<>
-			<Button
-				variant="primary"
-				onClick={ () => setModalOpen( true ) }
-			>
+			<Button variant="primary" onClick={ () => setModalOpen( true ) }>
 				{ title }
 			</Button>
 			{ modalOpen && (
