@@ -28,15 +28,17 @@ jobs:
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npm run --silent lint:js -- --format json > /tmp/eslint.json || true
-          reviewdog -f=eslint -name="eslint" -reporter=github-pr-review -fail-on-error < /tmp/eslint.json
+          npm run --silent lint:js -- --format json > /tmp/eslint.json; echo "eslint exit: $?"
+          echo "=== eslint.json ===" && cat /tmp/eslint.json
+          reviewdog -f=eslint -name="eslint" -reporter=github-pr-review -fail-on-error < /tmp/eslint.json; echo "reviewdog exit: $?"
 
       - name: Lint CSS
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npm run --silent lint:css -- --formatter json > /tmp/stylelint.json || true
-          reviewdog -f=stylelint -name="stylelint" -reporter=github-pr-review -fail-on-error < /tmp/stylelint.json
+          npm run --silent lint:css -- --formatter json > /tmp/stylelint.json; echo "stylelint exit: $?"
+          echo "=== stylelint.json ===" && cat /tmp/stylelint.json
+          reviewdog -f=stylelint -name="stylelint" -reporter=github-pr-review -fail-on-error < /tmp/stylelint.json; echo "reviewdog exit: $?"
 
   lint-php:
     name: Lint PHP
@@ -57,4 +59,7 @@ jobs:
       - name: Lint PHP
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: composer run lint:php -- --report=checkstyle --no-colors | reviewdog -f=checkstyle -name="phpcs" -reporter=github-pr-review -fail-on-error
+        run: |
+          composer run lint:php -- --report=checkstyle --no-colors > /tmp/phpcs.xml; echo "phpcs exit: $?"
+          echo "=== phpcs.xml ===" && cat /tmp/phpcs.xml
+          reviewdog -f=checkstyle -name="phpcs" -reporter=github-pr-review -fail-on-error < /tmp/phpcs.xml; echo "reviewdog exit: $?"
