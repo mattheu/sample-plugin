@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e
 
-echo "Starting environment..." >&2
-npx wp-env start
-
 echo "Resetting tests environment database..." >&2
 npx wp-env clean tests
 

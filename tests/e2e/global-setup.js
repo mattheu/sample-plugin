@@ -9,6 +9,8 @@ module.exports = async () => {
 	await page.fill( '#user_pass', 'password' );
 	await page.click( '#wp-submit' );
 	await page.waitForURL( '**/wp-admin/**' );
-	await page.context().storageState( { path: path.join( __dirname, 'storage-state.json' ) } );
+	await page
+		.context()
+		.storageState( { path: path.join( __dirname, 'storage-state.json' ) } );
 	await browser.close();
 };

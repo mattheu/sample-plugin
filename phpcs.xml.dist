@@ -33,6 +33,21 @@
 				<element value="get_block_wrapper_attributes"/>
 			</property>
 		</properties>
+		<!-- Tests assert output directly; escaping is not required -->
+		<exclude-pattern>*/tests/*</exclude-pattern>
+	</rule>
+
+	<!-- Test files use PSR-4 PascalCase filenames and class names, not WordPress conventions -->
+	<rule ref="WordPress.Files.FileName">
+		<exclude-pattern>*/tests/*</exclude-pattern>
+	</rule>
+	<rule ref="PEAR.NamingConventions.ValidClassName">
+		<exclude-pattern>*/tests/*</exclude-pattern>
+	</rule>
+
+	<!-- Test bootstrap uses dynamic paths for the WP test suite location -->
+	<rule ref="WordPressVIPMinimum.Files.IncludingFile">
+		<exclude-pattern>*/tests/*</exclude-pattern>
 	</rule>
 
 	<config name="minimum_supported_wp_version" value="6.4"/>

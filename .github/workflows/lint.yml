@@ -1,0 +1,64 @@
+name: Lint
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lint-js-css:
+    name: Lint JS & CSS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - uses: reviewdog/action-setup@v1
+
+      - name: Lint JS
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npm run --silent lint:js -- --format checkstyle > /tmp/eslint.xml || true
+          reviewdog -f=checkstyle -name="eslint" -reporter=github-pr-review -fail-on-error < /tmp/eslint.xml
+
+      - name: Lint CSS
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npm run --silent lint:css -- --formatter json > /tmp/stylelint.json; echo "stylelint exit: $?"
+          echo "=== stylelint.json ===" && cat /tmp/stylelint.json
+          reviewdog -f=stylelint -name="stylelint" -reporter=github-pr-review -fail-on-error < /tmp/stylelint.json; echo "reviewdog exit: $?"
+
+  lint-php:
+    name: Lint PHP
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
+
+      - name: Install Composer dependencies
+        run: composer install --no-progress --no-interaction
+
+      - uses: reviewdog/action-setup@v1
+
+      - name: Lint PHP
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          composer run lint:php -- --report=checkstyle --no-colors > /tmp/phpcs.xml; echo "phpcs exit: $?"
+          echo "=== phpcs.xml ===" && cat /tmp/phpcs.xml
+          reviewdog -f=checkstyle -name="phpcs" -reporter=github-pr-review -fail-on-error < /tmp/phpcs.xml; echo "reviewdog exit: $?"

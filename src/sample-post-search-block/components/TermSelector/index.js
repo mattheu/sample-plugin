@@ -25,30 +25,47 @@ function generateIdToTitleMap( termObjects ) {
 export default function TermSelector( props ) {
 	const { taxonomy, value = [], onChange } = props;
 
-	const taxObject = useSelect( ( select ) => {
-		return select( 'core' ).getTaxonomy( taxonomy );
-	}, [ taxonomy ] );
+	const taxObject = useSelect(
+		( select ) => {
+			return select( 'core' ).getTaxonomy( taxonomy );
+		},
+		[ taxonomy ]
+	);
 
-	const { taxonomyTermsById, taxonomyTermsByTitle } = useSelect( ( select ) => {
-		const termObjects = select( 'core' ).getEntityRecords( 'taxonomy', taxonomy, { per_page: 100 } ) ?? [];
-		return {
-			taxonomyTermsById: generateIdToTitleMap( termObjects ),
-			taxonomyTermsByTitle: generateTitleToIdMap( termObjects ),
-		};
-	}, [ taxonomy ] );
+	const { taxonomyTermsById, taxonomyTermsByTitle } = useSelect(
+		( select ) => {
+			const termObjects =
+				select( 'core' ).getEntityRecords( 'taxonomy', taxonomy, {
+					per_page: 100,
+				} ) ?? [];
+			return {
+				taxonomyTermsById: generateIdToTitleMap( termObjects ),
+				taxonomyTermsByTitle: generateTitleToIdMap( termObjects ),
+			};
+		},
+		[ taxonomy ]
+	);
 
-	const selectedTerms = value.map( ( id ) => taxonomyTermsById[ id ] ).filter( Boolean );
+	const selectedTerms = value
+		.map( ( id ) => taxonomyTermsById[ id ] )
+		.filter( Boolean );
 
 	return (
 		<div style={ { paddingBottom: 16 } }>
-		<FormTokenField
-			label={ sprintf( __( 'Filter by %s', 'sample-plugin' ), taxObject ? taxObject.labels.singular_name : '' ) }
-			suggestions={ Object.values( taxonomyTermsById ) }
-			value={ selectedTerms }
-			onChange={ ( terms ) => {
-				onChange( terms.map( ( term ) => taxonomyTermsByTitle[ term ] ) );
-			} }
-		/>
+			<FormTokenField
+				label={ sprintf(
+					/* translators: %s: taxonomy singular label. */
+					__( 'Filter by %s', 'sample-plugin' ),
+					taxObject ? taxObject.labels.singular_name : ''
+				) }
+				suggestions={ Object.values( taxonomyTermsById ) }
+				value={ selectedTerms }
+				onChange={ ( terms ) => {
+					onChange(
+						terms.map( ( term ) => taxonomyTermsByTitle[ term ] )
+					);
+				} }
+			/>
 		</div>
 	);
 }
