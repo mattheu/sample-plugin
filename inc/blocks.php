@@ -9,11 +9,9 @@ declare( strict_types=1 );
 
 namespace SamplePlugin\Blocks;
 
-function bootstrap()
-{
-
-$foo = 'bar';
-
-echo $foo;
-    register_block_type(dirname( __DIR__ ) . '/build/sample-post-search-block' );
+/**
+ * Registers all blocks.
+ */
+function bootstrap(): void {
+	register_block_type( dirname( __DIR__ ) . '/build/sample-post-search-block' );
 }
