@@ -21,3 +21,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/inc/blocks.php';
 
 add_action( 'init', __NAMESPACE__ . '\\Blocks\\bootstrap' );
+
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	require_once __DIR__ . '/inc/class-cli-command.php';
+	\WP_CLI::add_command( 'dmg-read-more', CLI\CLI_Command::class );
+}

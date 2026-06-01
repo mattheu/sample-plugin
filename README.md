@@ -21,6 +21,34 @@ Renders one or more "Read More" links, each pointing to a selected post. The blo
 
 Insert the block, then use the toolbar button or the sidebar panel to open the post picker and select posts.
 
+## WP-CLI Commands
+
+### `wp dmg-read-more block-search`
+
+Searches for posts that contain the `sample-plugin/sample-post-search-block` block and prints matching post IDs to STDOUT, one per line. Defaults to published posts from the last 30 days.
+
+**Options**
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--date-after=<Y-m-d>` | Find posts published on or after this date. | 30 days ago |
+| `--date-before=<Y-m-d>` | Find posts published on or before this date. | Today |
+| `--post-type=<post-type>` | Post type to search. | `post` |
+| `--post-status=<post-status>` | Post status to search. | `publish` |
+
+**Examples**
+
+```bash
+# Default: search published posts from the last 30 days
+npm run wp -- dmg-read-more block-search
+
+# Specific date range
+npm run wp -- dmg-read-more block-search --date-after=2024-01-01 --date-before=2024-01-31
+
+# Search a custom post type
+npm run wp -- dmg-read-more block-search --post-type=article
+```
+
 ## Development
 
 The local environment runs WordPress in Docker via WP-Env. The build toolchain uses `@wordpress/scripts` (webpack under the hood) to compile JS and SCSS.
@@ -58,7 +86,7 @@ npm run env:seed
 
 This imports `bin/sample-content.xml` into the development environment using the WordPress Importer. Re-running will create duplicates; use `npm run env:clean` to reset first.
 
-## WP-CLI
+### Running WP-CLI commands in development environment.
 
 WP-CLI is available inside the Docker environment via the `wp` script. Any standard WP-CLI command can be passed after `--`.
 
