@@ -7,11 +7,13 @@
 		"start": "wp-scripts start",
 		"lint:js": "wp-scripts lint-js",
 		"lint:css": "wp-scripts lint-style",
+		"lint:php": "composer run lint:php",
 		"packages-update": "wp-scripts packages-update",
 		"env:start": "wp-env start",
 		"env:stop": "wp-env stop",
 		"env:clean": "wp-npm run stop && wp-env clean && npm run start",
-		"wp": "wp-env run cli wp"
+		"wp": "wp-env run cli wp",
+		"test:php": "wp-env run tests-cli --env-cwd wp-content/plugins/sample-plugin vendor/bin/phpunit"
 	},
 	"devDependencies": {
 		"@wordpress/env": "^10.0.0",

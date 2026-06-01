@@ -29,8 +29,13 @@ if ( empty( $block_posts ) ) {
 	return;
 }
 ?>
-<div <?php echo wp_kses_post( get_block_wrapper_attributes( array( 'class' => 'dmg-read-more' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+<div <?php echo get_block_wrapper_attributes( [ 'class' => 'dmg-read-more' ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<?php foreach ( $block_posts as $block_post ) : ?>
-		<p><a href="<?php echo esc_url( get_permalink( $block_post ) ); ?>"><?php echo esc_html( 'Read More: ' . get_the_title( $block_post ) ); ?></a></p>
+		<p><a href="<?php echo esc_url( get_permalink( $block_post ) ); ?>">
+			<?php
+			// translators: %s: Post title.
+			echo esc_html( sprintf( __( 'Read More: %s', 'sample-plugin' ), get_the_title( $block_post ) ) );
+			?>
+		</a></p>
 	<?php endforeach; ?>
 </div>

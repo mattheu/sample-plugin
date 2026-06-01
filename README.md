@@ -79,3 +79,11 @@ npm run lint:js       # Lint JavaScript (ESLint)
 npm run lint:css      # Lint CSS/SCSS (Stylelint)
 composer lint:php     # Lint PHP (PHPCS with WordPress coding standards)
 ```
+
+## Testing
+
+PHP tests use PHPUnit against a real WordPress install inside the `wp-env` Docker environment. The environment must be running before executing tests.
+
+```bash
+npm run test:php
+```
