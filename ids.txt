@@ -1,0 +1,5 @@
+
+> sample-plugin@0.1.0 wp
+> wp-env run cli wp dmg-read-more block-search --date-after=2025-01-01 --post-type=page
+
+200
