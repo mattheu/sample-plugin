@@ -87,18 +87,26 @@ composer lint:php     # Lint PHP (PHPCS with WordPress coding standards)
 
 ## Testing
 
-PHP tests use PHPUnit and E2E tests use Playwright. Both target the `tests-wordpress` environment (port 8889), which uses a separate database (`tests_wordpress`) from the development environment. Test content never touches the development database.
+PHP tests use PHPUnit and E2E tests use Playwright. Both require Docker and the wp-env environment to be running before executing tests.
 
-**PHP tests** require the environment to be running:
+**Prerequisite:** start the environment before running either test suite.
+
+```bash
+npm run env:start
+```
+
+Both test suites target the `tests-wordpress` environment (port 8889), which uses a separate database (`tests_wordpress`) from the development environment. Test content never touches the development database.
+
+**PHP tests:**
 
 ```bash
 npm run test:php        # PHPUnit — block render output
 ```
 
-**E2E tests** are self-contained — the setup script starts the environment, resets the tests database, and imports the required content. The database is treated as disposable and reset on each run.
+**E2E tests:** the setup script resets the tests database and imports the required content. The database is treated as disposable and reset on each run.
 
 ```bash
-npm run env:setup-e2e      # Start environment, reset tests DB, import content
+npm run env:setup-e2e      # Reset tests DB and import content
 npm run test:e2e            # Playwright — block editor interactions
 npm run test:e2e -- --ui   # Run with Playwright's interactive UI mode
 ```

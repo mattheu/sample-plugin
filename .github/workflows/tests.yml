@@ -1,12 +1,12 @@
-name: PHPUnit Tests
+name: Tests
 
 on:
   pull_request:
     branches: [main]
 
 jobs:
-  phpunit:
-    name: PHPUnit
+  tests:
+    name: PHPUnit & E2E
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,6 +28,21 @@ jobs:
 
       - name: Build assets
         run: npm run build
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
 
       - name: Cache Docker images
         id: docker-cache
@@ -51,3 +66,16 @@ jobs:
 
       - name: Run PHPUnit
         run: npm run test:php
+
+      - name: Set up E2E environment
+        run: npm run env:setup-e2e
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: test-results/
