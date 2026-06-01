@@ -77,7 +77,7 @@ class SamplePostSearchBlockTest extends WP_UnitTestCase {
 	public function test_anchor_is_wrapped_in_paragraph(): void {
 		$post_id = self::factory()->post->create( [ 'post_status' => 'publish' ] );
 		$output  = $this->render( [ 'postIds' => [ $post_id ] ] );
-		$this->assertMatchesRegularExpression( '/<p><a [^>]*>Read More:/', $output );
+		$this->assertMatchesRegularExpression( '/<p><a [^>]*>\s*Read More:/', $output );
 	}
 
 	public function test_renders_multiple_posts(): void {
