@@ -1,3 +1,8 @@
 /node_modules/
 /vendor/
 /build/
+/tests/e2e/storage-state.json
+/tests/e2e/auth.json
+/test-results/
+.phpunit.result.cache
+.DS_Store

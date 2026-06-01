@@ -11,11 +11,17 @@
 		"packages-update": "wp-scripts packages-update",
 		"env:start": "wp-env start",
 		"env:stop": "wp-env stop",
-		"env:clean": "wp-npm run stop && wp-env clean && npm run start",
+		"env:clean": "npm run env:stop && wp-env clean && npm run env:start",
+		"env:destroy": "wp-env destroy",
 		"wp": "wp-env run cli wp",
-		"test:php": "wp-env run tests-cli --env-cwd wp-content/plugins/sample-plugin vendor/bin/phpunit"
+		"test:php": "wp-env run tests-cli --env-cwd wp-content/plugins/sample-plugin vendor/bin/phpunit",
+		"test:e2e": "playwright test",
+		"env:setup-e2e": "bash bin/setup-e2e.sh",
+		"env:seed": "bash bin/seed-dev.sh"
 	},
 	"devDependencies": {
+		"@playwright/test": "^1.60.0",
+		"@wordpress/e2e-test-utils-playwright": "^1.47.0",
 		"@wordpress/env": "^10.0.0",
 		"@wordpress/scripts": "^30.0.0"
 	}

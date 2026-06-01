@@ -38,20 +38,25 @@ Build assets with `npm run build` or start the build watcher `npm run start`
 Local Docker development environment using [WP-Env](https://developer.wordpress.org/block-editor/getting-started/devenv/get-started-with-wp-env/). Following commands are available:
 
 ```bash
-npm run env:start # Start environment
-npm run env:stop # Stop environment
-npm run env:clean # Stop, reset and start environment
+npm run env:start   # Start environment
+npm run env:stop    # Stop environment
+npm run env:clean   # Stop, reset and start environment
+npm run env:destroy # Remove all containers, volumes, and generated files
 ```
 
 The database persists between restarts.
 
 Visit **http://localhost:8888** — admin at http://localhost:8888/wp-admin (`admin` / `password`).
 
-Optional: Generate some test content.
+**Seeding sample content**
+
+After starting the environment for the first time, import sample posts, categories, tags, and a test page via:
 
 ```bash
-npm run wp -- post generate --count=50 --post_status=publish
+npm run env:seed
 ```
+
+This imports `bin/sample-content.xml` into the development environment using the WordPress Importer. Re-running will create duplicates; use `npm run env:clean` to reset first.
 
 ## WP-CLI
 
@@ -82,8 +87,18 @@ composer lint:php     # Lint PHP (PHPCS with WordPress coding standards)
 
 ## Testing
 
-PHP tests use PHPUnit against a real WordPress install inside the `wp-env` Docker environment. The environment must be running before executing tests.
+PHP tests use PHPUnit and E2E tests use Playwright. Both target the `tests-wordpress` environment (port 8889), which uses a separate database (`tests_wordpress`) from the development environment. Test content never touches the development database.
+
+**PHP tests** require the environment to be running:
 
 ```bash
-npm run test:php
+npm run test:php        # PHPUnit — block render output
+```
+
+**E2E tests** are self-contained — the setup script starts the environment, resets the tests database, and imports the required content. The database is treated as disposable and reset on each run.
+
+```bash
+npm run env:setup-e2e      # Start environment, reset tests DB, import content
+npm run test:e2e            # Playwright — block editor interactions
+npm run test:e2e -- --ui   # Run with Playwright's interactive UI mode
 ```
