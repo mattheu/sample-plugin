@@ -21,6 +21,34 @@ Renders one or more "Read More" links, each pointing to a selected post. The blo
 
 Insert the block, then use the toolbar button or the sidebar panel to open the post picker and select posts.
 
+## WP-CLI Commands
+
+### `wp dmg-read-more block-search`
+
+Searches for posts that contain the `sample-plugin/sample-post-search-block` block and prints matching post IDs to STDOUT, one per line. Defaults to published posts from the last 30 days.
+
+**Options**
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--date-after=<Y-m-d>` | Find posts published on or after this date. | 30 days ago |
+| `--date-before=<Y-m-d>` | Find posts published on or before this date. | Today |
+| `--post-type=<post-type>` | Post type to search. | `post` |
+| `--post-status=<post-status>` | Post status to search. | `publish` |
+
+**Examples**
+
+```bash
+# Default: search published posts from the last 30 days
+npm run wp -- dmg-read-more block-search
+
+# Specific date range
+npm run wp -- dmg-read-more block-search --date-after=2024-01-01 --date-before=2024-01-31
+
+# Search a custom post type
+npm run wp -- dmg-read-more block-search --post-type=article
+```
+
 ## Development
 
 The local environment runs WordPress in Docker via WP-Env. The build toolchain uses `@wordpress/scripts` (webpack under the hood) to compile JS and SCSS.
@@ -58,7 +86,7 @@ npm run env:seed
 
 This imports `bin/sample-content.xml` into the development environment using the WordPress Importer. Re-running will create duplicates; use `npm run env:clean` to reset first.
 
-## WP-CLI
+### Running WP-CLI commands in development environment.
 
 WP-CLI is available inside the Docker environment via the `wp` script. Any standard WP-CLI command can be passed after `--`.
 
@@ -74,50 +102,6 @@ Examples:
 npm run wp -- post list
 npm run wp -- option get siteurl
 ```
-
-### Custom commands
-
-#### `wp dmg-read-more block-search`
-
-Searches for published posts that contain the `sample-plugin/sample-post-search-block` (dmg-read-more) block and prints matching post IDs to STDOUT, one per line.
-
-If no `--date-after` / `--date-before` flags are provided the command defaults to the **last 30 days**.
-
-**Options**
-
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--date-after=<Y-m-d>` | Find posts published on or after this date. | 30 days ago |
-| `--date-before=<Y-m-d>` | Find posts published on or before this date. | Today |
-
-**Examples**
-
-```bash
-# Default: search the last 30 days
-npm run wp -- dmg-read-more block-search
-
-# Specific date range
-npm run wp -- dmg-read-more block-search --date-after=2024-01-01 --date-before=2024-01-31
-
-# Pipe IDs into another WP-CLI command
-npm run wp -- dmg-read-more block-search --date-after=2024-01-01 | xargs -I{} wp post get {}
-```
-
-**Full inline help**
-
-```bash
-npm run wp -- help dmg-read-more block-search
-```
-
-#### Performance notes
-
-This command is designed to run against databases with tens of millions of rows in `wp_posts`. Key implementation choices:
-
-- **Date-first filtering** — `post_date` is indexed. The date range is applied before content scanning, so the `LIKE` check only runs on a fraction of the table.
-- **`post_content LIKE` is an unindexed scan** — MySQL cannot use a B-tree index on a `LONGTEXT` column for substring searches. Narrow date windows (days/weeks rather than years) keep this cost manageable.
-- **Cursor-based batching** — Results are fetched in batches of 500 using `WHERE ID > {last_id}` instead of `LIMIT/OFFSET`. Standard `OFFSET` pagination requires MySQL to scan and discard preceding rows on every page, a cost that grows linearly with depth. Cursor pagination avoids this entirely.
-- **ID-only projection** — Only the `ID` column is selected; full post objects are never loaded into PHP memory.
-- **Streaming output** — IDs are printed as each batch arrives, keeping PHP memory usage constant regardless of result set size.
 
 ## Linting
 
