@@ -26,6 +26,9 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-progress --no-interaction
 
+      - name: Build assets
+        run: npm run build
+
       - name: Cache Docker images
         id: docker-cache
         uses: actions/cache@v4
