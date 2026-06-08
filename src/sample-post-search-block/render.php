@@ -19,6 +19,7 @@ $query = new WP_Query(
 		'posts_per_page'      => count( $post_ids ),
 		'orderby'             => 'post__in',
 		'ignore_sticky_posts' => true,
+		'no_found_rows'       => true,
 	]
 );
 
