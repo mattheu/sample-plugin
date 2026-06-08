@@ -36,8 +36,8 @@ jobs:
         id: playwright-cache
         uses: actions/cache@v4
         with:
-        path: ~/.cache/ms-playwright
-        key: playwright-${{ hashFiles('package-lock.json') }}
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
 
       - name: Install Playwright browsers
         timeout-minutes: 5
@@ -47,8 +47,8 @@ jobs:
         id: docker-cache
         uses: actions/cache@v4
         with:
-        path: /tmp/docker-images
-        key: docker-wp-env-${{ hashFiles('.wp-env.json') }}
+          path: /tmp/docker-images
+          key: docker-wp-env-${{ hashFiles('.wp-env.json') }}
 
       - name: Load Docker images
         if: steps.docker-cache.outputs.cache-hit == 'true'
