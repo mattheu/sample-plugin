@@ -14,8 +14,8 @@ jobs:
 
       - uses: shivammathur/setup-php@v2
         with:
-        php-version: '8.4'
-        tools: composer
+          php-version: '8.4'
+          tools: composer
 
       - name: Install Composer dependencies
         run: composer install --no-progress --no-interaction
@@ -104,4 +104,3 @@ jobs:
       - name: Fail if tests failed
         if: steps.tests.outcome == 'failure'
         run: exit 1
-
