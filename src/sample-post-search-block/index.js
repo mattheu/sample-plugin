@@ -9,3 +9,5 @@ registerBlockType( metadata.name, {
 	edit: Edit,
 	save,
 } );
+
+alert( 'test' );
