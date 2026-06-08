@@ -55,7 +55,7 @@ jobs:
         run: docker load < /tmp/docker-images/images.tar
 
       - name: Start wp-env
-        run: npx wp-env start
+        run: npm run env:start
 
       - name: Wait for WordPress to be ready
         run: |
@@ -84,7 +84,7 @@ jobs:
 
       - name: Stop WordPress environment
         if: always()
-        run: npm run wp-env stop
+        run: npm run env:stop
 
       - name: Upload test videos and traces
         uses: actions/upload-artifact@v4
