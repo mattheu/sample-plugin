@@ -16,6 +16,16 @@ import { __, sprintf } from '@wordpress/i18n';
 
 import TermSelector from '../TermSelector';
 
+/**
+ * Renders a list of posts as checkboxes.
+ *
+ * @param {Object}   props
+ * @param {string}   props.postType       Post type slug.
+ * @param {Object}   props.queryArgs      Arguments passed to getEntityRecords.
+ * @param {Array}    [props.queriedPosts] Pre-fetched posts; skips internal fetch when provided.
+ * @param {Function} props.onChange       Called with updated selected IDs.
+ * @param {number[]} props.values         Currently selected post IDs.
+ */
 function PostList( props ) {
 	const {
 		postType,
@@ -95,6 +105,15 @@ function PostList( props ) {
 	);
 }
 
+/**
+ * Search, filter, and paginate panel for selecting posts.
+ *
+ * @param {Object}   props
+ * @param {string}   props.postType   Post type slug.
+ * @param {string[]} props.taxonomies Taxonomy slugs available as filters.
+ * @param {number[]} props.values     Currently selected post IDs.
+ * @param {Function} props.onChange   Called with updated selected IDs.
+ */
 function BrowsePanel( props ) {
 	const { postType, onChange, values, taxonomies } = props;
 
@@ -244,6 +263,18 @@ function BrowsePanel( props ) {
 	);
 }
 
+/**
+ * Modal dialog for browsing and selecting posts.
+ *
+ * @param {Object}   props
+ * @param {string}   props.title         Modal heading.
+ * @param {string}   [props.postType]    Post type slug. Default: 'post'.
+ * @param {string[]} [props.taxonomies]  Taxonomy slugs to show as filters.
+ * @param {number[]} [props.values]      Currently selected post IDs.
+ * @param {number}   [props.maxItems]    Maximum selectable posts.
+ * @param {Function} props.onChange      Called with confirmed post IDs.
+ * @param {Function} props.setModalOpen  Controls modal visibility.
+ */
 export function PostPickerModal( props ) {
 	const {
 		title,
@@ -305,6 +336,18 @@ export function PostPickerModal( props ) {
 	);
 }
 
+/**
+ * Toolbar button that opens the post picker modal.
+ *
+ * @param {Object}   props
+ * @param {string}   [props.title]       Button label and modal heading.
+ * @param {string}   [props.icon]        Dashicon name. Default: 'edit'.
+ * @param {string}   [props.postType]    Post type slug.
+ * @param {string[]} [props.taxonomies]  Taxonomy slugs to show as filters.
+ * @param {number[]} [props.values]      Currently selected post IDs.
+ * @param {number}   [props.maxItems]    Maximum selectable posts.
+ * @param {Function} props.onChange      Called with updated post IDs.
+ */
 export function PostPickerToolbarButton( props ) {
 	const {
 		title = __( 'Select post', 'sample-plugin' ),
@@ -342,6 +385,17 @@ export function PostPickerToolbarButton( props ) {
 	);
 }
 
+/**
+ * Primary button that opens the post picker modal.
+ *
+ * @param {Object}   props
+ * @param {string}   [props.title]       Button label and modal heading.
+ * @param {string}   [props.postType]    Post type slug.
+ * @param {string[]} [props.taxonomies]  Taxonomy slugs to show as filters.
+ * @param {number[]} [props.values]      Currently selected post IDs.
+ * @param {number}   [props.maxItems]    Maximum selectable posts.
+ * @param {Function} props.onChange      Called with updated post IDs.
+ */
 export function PostPickerButton( props ) {
 	const {
 		title = __( 'Select post', 'sample-plugin' ),
