@@ -15,6 +15,13 @@ import {
 	PostPickerToolbarButton,
 } from './components/PostPicker';
 
+/**
+ * Block edit component for the sample post search block.
+ *
+ * @param {Object}   props
+ * @param {Object}   props.attributes    Block attributes.
+ * @param {Function} props.setAttributes Updates block attributes.
+ */
 export default function Edit( { attributes, setAttributes } ) {
 	const { postIds } = attributes;
 	const [ modalOpen, setModalOpen ] = useState( false );

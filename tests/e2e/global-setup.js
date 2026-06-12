@@ -1,6 +1,9 @@
 const { chromium } = require( '@playwright/test' );
 const path = require( 'path' );
 
+/**
+ * Playwright global setup — logs in to wp-admin and saves browser auth storage state.
+ */
 module.exports = async () => {
 	const browser = await chromium.launch();
 	const page = await browser.newPage();

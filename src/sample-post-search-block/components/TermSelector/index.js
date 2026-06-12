@@ -2,6 +2,12 @@ import { FormTokenField } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { __, sprintf } from '@wordpress/i18n';
 
+/**
+ * Converts an array of term objects into a title-to-ID lookup map.
+ *
+ * @param {Array} termObjects Term objects with `name` and `id` properties.
+ * @return {Object} Map of term name to term ID.
+ */
 function generateTitleToIdMap( termObjects ) {
 	if ( ! termObjects ) {
 		return [];
@@ -12,6 +18,12 @@ function generateTitleToIdMap( termObjects ) {
 	}, {} );
 }
 
+/**
+ * Converts an array of term objects into an ID-to-title lookup map.
+ *
+ * @param {Array} termObjects Term objects with `name` and `id` properties.
+ * @return {Object} Map of term ID to term name.
+ */
 function generateIdToTitleMap( termObjects ) {
 	if ( ! termObjects ) {
 		return [];
@@ -22,6 +34,14 @@ function generateIdToTitleMap( termObjects ) {
 	}, {} );
 }
 
+/**
+ * Token field for filtering by a taxonomy term.
+ *
+ * @param {Object}   props
+ * @param {string}   props.taxonomy  Taxonomy slug.
+ * @param {number[]} props.value     Selected term IDs.
+ * @param {Function} props.onChange  Called with updated term IDs.
+ */
 export default function TermSelector( props ) {
 	const { taxonomy, value = [], onChange } = props;
 
