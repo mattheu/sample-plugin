@@ -12,4 +12,9 @@ module.exports = defineConfig( {
 	// Give Docker containers more time to respond.
 	timeout: 60_000,
 	expect: { timeout: 10_000 },
+	reporter: [
+		[ 'list' ],
+		[ 'html', { open: process.env.CI ? 'never' : 'on-failure' } ],
+		[ 'json', { outputFile: 'test-results/results.json' } ],
+	],
 } );
